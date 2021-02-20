@@ -25,7 +25,7 @@ let sorted_sam = fs.createWriteStream(SORTED_SAM_FILE);
 let original_compressed_vcf_file = fs.createWriteStream(ORIGINAL_COMPRESSED_VCF_FILE);
 let result_vcf_file = fs.createWriteStream(RESULT_VCF_FILE);
 // function definitions are provided here below
-// creates SAM from FASTA reference file and FASTQ reads
+// index FASTA reference file and FASTQ reads
 function index_reads() {
         console.log(REF_FILE_PATH+REFERENCE_FA_FILE);
         console.log(COMPRESSED_READS_FILE_ONE);
