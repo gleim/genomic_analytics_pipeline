@@ -3,7 +3,7 @@
 //   2. sort the aligned data
 //   3. call variants on the sorted aligned sequence data
 // dependencies are declared here
-//import {vcfToJSON} from 'vcftojson';
+const { vcfToJSON } = require("vcftojson");
 const { spawn } = require("child_process");
 const fs = require('fs');
 // constant string references are declared and defined here
@@ -16,6 +16,7 @@ const ORIGINAL_SAM_FILE = "sample.sam"
 const SORTED_SAM_FILE = "sample-s.sam"
 const ORIGINAL_COMPRESSED_VCF_FILE = "in.vcf.gz"
 const RESULT_VCF_FILE = "result.vcf"
+const RESULT_JSON_FILE = "result.json"
 const VARIANT_CALLING_FLAGS = "-Ou"
 const VARIANT_CALLING_FLAGS_2 = "-vmO"
 const FASTA_REF_FLAG = "--fasta-ref"
@@ -24,8 +25,9 @@ let sam = fs.createWriteStream(ORIGINAL_SAM_FILE);
 let sorted_sam = fs.createWriteStream(SORTED_SAM_FILE);
 let original_compressed_vcf_file = fs.createWriteStream(ORIGINAL_COMPRESSED_VCF_FILE);
 let result_vcf_file = fs.createWriteStream(RESULT_VCF_FILE);
+let result_json_file = fs.createWriteStream(RESULT_JSON_FILE);
 // function definitions are provided here below
-// creates SAM from FASTA reference file and FASTQ reads
+// index FASTA reference file and FASTQ reads
 function index_reads() {
         console.log(REF_FILE_PATH+REFERENCE_FA_FILE);
         console.log(COMPRESSED_READS_FILE_ONE);
@@ -126,6 +128,26 @@ function call_variants_2() {
   vcf_edit_thread.on("close", code => {
     console.log(`child process exited with code ${code}`);
     result_vcf_file.close();
+    convert_to_JSON();
+  });
+}
+// creates JSON from VCF
+function convert_to_JSON() {
+  console.log("Calling Variants from " + RESULT_VCF_FILE);
+  const vcf_read_thread = fs.readFileSync(RESULT_VCF_FILE,{encoding:"utf-8"});
+  
+  // display JSON to console
+  const json = vcfToJSON(vcf_read_thread).then(response => console.log(response));
+
+  // write JSON to file
+  const json_write_thread = vcfToJSON(vcf_read_thread).then(function(results) {
+    return new Promise(function(resolve, reject) {
+      try {
+        fs.writeFileSync(RESULT_JSON_FILE, JSON.stringify(results));
+      } catch (err) {
+        console.error(err);
+      }
+    });
   });
 }
 // this section will initiate execution of the pipeline
