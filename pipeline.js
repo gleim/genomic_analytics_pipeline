@@ -144,10 +144,32 @@ function convert_to_JSON() {
     return new Promise(function(resolve, reject) {
       try {
         fs.writeFileSync(RESULT_JSON_FILE, JSON.stringify(results));
+
+        read_parse_plot_JSON();
+
       } catch (err) {
         console.error(err);
       }
     });
+  });
+}
+// read, parse & plot data from JSON file
+function read_parse_plot_JSON() {
+  console.log("Reading JSON from " + RESULT_JSON_FILE);
+  const json_read_file = fs.readFile(RESULT_JSON_FILE,{encoding:"utf-8"}, (err, data) => {
+    if (err) {
+      console.err("Error reading file from " + RESULT_JSON_FILE);
+    } else {
+      console.log("Performing parameter sweep on variants from JSON");
+      
+      // parse JSON string to JSON object
+      const variants = JSON.parse(data);
+
+      // parameter sweep over Position and Quality
+      variants.forEach(variant => {
+        console.log("Position: " + variant.pos + ", Quality: " + variant.qual);
+      });
+    }
   });
 }
 // this section will initiate execution of the pipeline
