@@ -6,6 +6,7 @@ Dependencies:
 * samtools
 * bcftools
 * node.js
+* nodeplotlib
 * https://github.com/roryk/tiny-test-data/
 
 Usage:
