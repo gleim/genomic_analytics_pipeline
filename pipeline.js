@@ -5,6 +5,7 @@
 // dependencies are declared here
 const { vcfToJSON } = require("vcftojson");
 const { spawn } = require("child_process");
+const {plot, Plot } = require("nodeplotlib");
 const fs = require('fs');
 // constant string references are declared and defined here
 const READS_FILE_PATH = "tiny-test-data/wgs/"
@@ -145,7 +146,7 @@ function convert_to_JSON() {
       try {
         fs.writeFileSync(RESULT_JSON_FILE, JSON.stringify(results));
 
-        read_parse_plot_JSON();
+        parameter_sweep();
 
       } catch (err) {
         console.error(err);
@@ -153,8 +154,8 @@ function convert_to_JSON() {
     });
   });
 }
-// read, parse & plot data from JSON file
-function read_parse_plot_JSON() {
+// read, parse & display data from JSON file
+function parameter_sweep() {
   console.log("Reading JSON from " + RESULT_JSON_FILE);
   const json_read_file = fs.readFile(RESULT_JSON_FILE,{encoding:"utf-8"}, (err, data) => {
     if (err) {
@@ -169,6 +170,42 @@ function read_parse_plot_JSON() {
       variants.forEach(variant => {
         console.log("Position: " + variant.pos + ", Quality: " + variant.qual);
       });
+    }
+    plot_parameters();
+  });
+}
+// plot data from JSON file
+function plot_parameters() {
+  console.log("Reading JSON from " + RESULT_JSON_FILE);
+  const json_read_file = fs.readFile(RESULT_JSON_FILE,{encoding:"utf-8"}, (err, data) => {
+    if (err) {
+      console.err("Error reading file from " + RESULT_JSON_FILE);
+    } else {
+      console.log("Performing parameter sweep on variants from JSON");
+      
+      // parse JSON string to JSON object
+      const variants = JSON.parse(data);
+
+      console.log(variants.length);
+
+      var index = 0;
+      var x = new Array(variants.length);
+      var y = new Array(variants.length);
+
+      // parameter sweep over Position and Quality
+      variants.forEach(variant => {
+        x[index] = variant.pos;
+        y[index] = variant.qual;
+        console.log("Position: " + x[index] + ", Quality: " + y[index]);
+
+	index = index + 1;
+      });
+
+      // line plot
+      plot([{x, y, type: 'line'}]);
+ 
+      // bar plot
+      plot([{x, y, type: 'bar'}]);
     }
   });
 }
