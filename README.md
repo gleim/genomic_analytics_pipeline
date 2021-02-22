@@ -1,7 +1,11 @@
 # genomic_analytics_pipeline
-Pipeline that sequentially performs: 1. read sequences alignment, 2. sort aligned data, 3. call variants
 
-Dependencies:
+## Robust genomic analytics pipeline framework that performs: 
+1. alignment of read sequences
+2. sorting of aligned data 
+3. calling of variants
+
+## Dependencies:
 * bwa
 * samtools
 * bcftools
@@ -9,5 +13,5 @@ Dependencies:
 * nodeplotlib
 * https://github.com/roryk/tiny-test-data/
 
-Usage:
+## Usage:
 node pipeline.js
