@@ -4,7 +4,7 @@
 1. alignment of read sequences
 2. sorting of aligned data 
 3. calling of variants
-4. parameter sweeping of variants
+4. parameter sweep of variants
 5. visual analysis graphic generation for variant parameter sweeps
 
 ## Dependencies:
