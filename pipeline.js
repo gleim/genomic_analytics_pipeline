@@ -181,12 +181,10 @@ function plot_parameters() {
     if (err) {
       console.err("Error reading file from " + RESULT_JSON_FILE);
     } else {
-      console.log("Performing parameter sweep on variants from JSON");
+      console.log("Generating parameter sweep plots from JSON");
       
       // parse JSON string to JSON object
       const variants = JSON.parse(data);
-
-      console.log(variants.length);
 
       var index = 0;
       var x = new Array(variants.length);
@@ -196,9 +194,7 @@ function plot_parameters() {
       variants.forEach(variant => {
         x[index] = variant.pos;
         y[index] = variant.qual;
-        console.log("Position: " + x[index] + ", Quality: " + y[index]);
-
-	index = index + 1;
+	      index = index + 1;
       });
 
       // line plot
